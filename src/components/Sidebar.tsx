@@ -23,10 +23,9 @@ const links: { id: Page; label: string; icon: React.ReactNode }[] = [
 export default function Sidebar({ page, setPage, botOnline, mobileOpen, closeMobile, queueCount }: Props) {
   const inner = (
     <div className="flex flex-col h-full">
-      {/* Logo */}
       <div className="px-5 pt-7 pb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-indigo-200">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-cyan-400 via-cyan-500 to-sky-500 flex items-center justify-center shadow-lg shadow-cyan-200">
             <IcBot className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -39,11 +38,10 @@ export default function Sidebar({ page, setPage, botOnline, mobileOpen, closeMob
         </button>
       </div>
 
-      {/* Status */}
       <div className="mx-4 mb-6">
         <div className={`px-4 py-3.5 rounded-2xl flex items-center gap-3 transition-all ${
           botOnline
-            ? 'bg-gradient-to-r from-emerald-50 to-emerald-50/50 border border-emerald-200/50'
+            ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/60'
             : 'glass'
         }`}>
           <div className={botOnline ? 'status-online' : 'status-offline'} />
@@ -53,7 +51,6 @@ export default function Sidebar({ page, setPage, botOnline, mobileOpen, closeMob
         </div>
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 px-3 space-y-1">
         {links.map(l => (
           <button
@@ -64,7 +61,7 @@ export default function Sidebar({ page, setPage, botOnline, mobileOpen, closeMob
             {l.icon}
             <span className="flex-1 text-left">{l.label}</span>
             {l.id === 'queue' && queueCount > 0 && (
-              <span className="min-w-[20px] h-5 flex items-center justify-center rounded-full bg-indigo-100 text-indigo-600 text-[10px] font-bold">
+              <span className="min-w-[20px] h-5 flex items-center justify-center rounded-full bg-cyan-100 text-cyan-600 text-[10px] font-bold">
                 {queueCount}
               </span>
             )}
@@ -72,7 +69,6 @@ export default function Sidebar({ page, setPage, botOnline, mobileOpen, closeMob
         ))}
       </nav>
 
-      {/* Bottom */}
       <div className="px-5 pb-6">
         <div className="divider mb-4" />
         <div className="text-[10px] text-slate-300 font-semibold mono">
@@ -87,7 +83,6 @@ export default function Sidebar({ page, setPage, botOnline, mobileOpen, closeMob
       <aside className="hidden lg:flex flex-col w-[250px] h-screen sticky top-0 glass-solid">
         {inner}
       </aside>
-
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm" onClick={closeMobile} />

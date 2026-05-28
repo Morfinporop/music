@@ -14,7 +14,6 @@ export default function DashboardPage({ status, tracks, onToggleBot }: Props) {
 
   return (
     <div className="space-y-8 animate-slide-up">
-      {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Панель управления</h1>
@@ -26,48 +25,26 @@ export default function DashboardPage({ status, tracks, onToggleBot }: Props) {
         </button>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          color="emerald"
-          icon={<div className={status.online ? 'status-online' : 'status-offline'} />}
-          label="Статус"
-          value={status.online ? 'Онлайн' : 'Оффлайн'}
-        />
-        <StatCard
-          color="indigo"
-          icon={<IcActivity className="w-4 h-4 text-indigo-500" />}
-          label="Время работы"
-          value={status.online ? `${uptimeH}ч ${uptimeM}м ${uptimeS}с` : '—'}
-        />
-        <StatCard
-          color="purple"
-          icon={<IcServer className="w-4 h-4 text-purple-500" />}
-          label="Серверов"
-          value={status.online ? String(status.guilds) : '0'}
-        />
-        <StatCard
-          color="amber"
-          icon={<IcMusic className="w-4 h-4 text-amber-500" />}
-          label="Треков"
-          value={String(tracks.length)}
-        />
+        <StatCard color="emerald" icon={<div className={status.online ? 'status-online' : 'status-offline'} />} label="Статус" value={status.online ? 'Онлайн' : 'Оффлайн'} />
+        <StatCard color="cyan" icon={<IcActivity className="w-4 h-4 text-cyan-500" />} label="Время работы" value={status.online ? `${uptimeH}ч ${uptimeM}м ${uptimeS}с` : '—'} />
+        <StatCard color="sky" icon={<IcServer className="w-4 h-4 text-sky-500" />} label="Серверов" value={status.online ? String(status.guilds) : '0'} />
+        <StatCard color="amber" icon={<IcMusic className="w-4 h-4 text-amber-500" />} label="Треков" value={String(tracks.length)} />
       </div>
 
-      {/* Now Playing */}
       <div className="glass-md rounded-3xl overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-fuchsia-500" />
+        <div className="h-1 bg-gradient-to-r from-cyan-400 via-cyan-500 to-sky-500" />
         <div className="p-7">
           <div className="flex items-center gap-2.5 mb-6">
-            <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" />
+            <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-cyan-400 to-sky-500" />
             <h2 className="text-xs font-bold text-slate-500 uppercase tracking-[.15em]">Сейчас играет</h2>
           </div>
 
           {status.currentTrack ? (
             <div className="flex items-center gap-6 flex-wrap">
-              <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-100 to-purple-100 border border-indigo-200/50 flex items-center justify-center ${status.isPlaying ? 'glow-indigo' : ''}`}>
+              <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-100 to-sky-100 border border-cyan-200/50 flex items-center justify-center ${status.isPlaying ? 'glow-cyan' : ''}`}>
                 <div className={status.isPlaying ? 'disc-spin' : ''}>
-                  <IcMusic className="w-8 h-8 text-indigo-400" />
+                  <IcMusic className="w-8 h-8 text-cyan-500" />
                 </div>
               </div>
               <div className="flex-1 min-w-0">
@@ -101,22 +78,24 @@ export default function DashboardPage({ status, tracks, onToggleBot }: Props) {
         </div>
       </div>
 
-      {/* Commands + Info */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="glass-md rounded-3xl p-7">
           <h2 className="text-xs font-bold text-slate-500 uppercase tracking-[.15em] mb-5">Команды бота</h2>
           <div className="space-y-3">
             {[
-              { cmd: '/play', args: '<запрос>', desc: 'Воспроизвести трек' },
+              { cmd: '/play', args: '<запрос>', desc: 'Воспроизвести' },
+              { cmd: '/np', args: '', desc: 'Текущий трек + кнопки' },
               { cmd: '/skip', args: '', desc: 'Пропустить' },
               { cmd: '/stop', args: '', desc: 'Остановить' },
               { cmd: '/queue', args: '', desc: 'Очередь' },
-              { cmd: '/np', args: '', desc: 'Текущий трек' },
+              { cmd: '/shuffle', args: '', desc: 'Перемешать' },
+              { cmd: '/loop', args: '<режим>', desc: 'Повтор' },
               { cmd: '/volume', args: '<1-100>', desc: 'Громкость' },
+              { cmd: '/lyrics', args: '[запрос]', desc: 'Текст песни' },
             ].map((c, i) => (
               <div key={i} className="flex items-center gap-3">
-                <code className="text-[12px] mono font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl min-w-[120px]">
-                  {c.cmd} <span className="text-indigo-300">{c.args}</span>
+                <code className="text-[12px] mono font-bold text-cyan-600 bg-cyan-50 px-3 py-1.5 rounded-xl min-w-[130px]">
+                  {c.cmd} <span className="text-cyan-300">{c.args}</span>
                 </code>
                 <span className="text-[12px] text-slate-400">{c.desc}</span>
               </div>
@@ -133,8 +112,12 @@ export default function DashboardPage({ status, tracks, onToggleBot }: Props) {
             <InfoRow icon={<IcQueue className="w-3.5 h-3.5" />} label="Очередь" value={`${status.queue.length} треков`} ok={status.queue.length > 0} />
           </div>
           <div className="divider my-5" />
-          <div className="text-[10px] text-slate-300 mono">
-            discord.js v14 / discord-player v7
+          <div className="flex items-center justify-between">
+            <div className="text-[10px] text-slate-300 mono">discord.js v14 / discord-player v7</div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-slate-400">Кнопки:</span>
+              <span className="text-[10px] text-emerald-500 font-bold">ВКЛ</span>
+            </div>
           </div>
         </div>
       </div>
@@ -145,8 +128,8 @@ export default function DashboardPage({ status, tracks, onToggleBot }: Props) {
 function StatCard({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: string; color: string }) {
   const colors: Record<string, string> = {
     emerald: 'from-emerald-50 to-emerald-50/30 border-emerald-200/50',
-    indigo: 'from-indigo-50 to-indigo-50/30 border-indigo-200/50',
-    purple: 'from-purple-50 to-purple-50/30 border-purple-200/50',
+    cyan: 'from-cyan-50 to-cyan-50/30 border-cyan-200/50',
+    sky: 'from-sky-50 to-sky-50/30 border-sky-200/50',
     amber: 'from-amber-50 to-amber-50/30 border-amber-200/50',
   };
   return (
