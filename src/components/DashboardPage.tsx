@@ -14,110 +14,77 @@ export default function DashboardPage({ status, tracks, onToggleBot }: Props) {
 
   return (
     <div className="space-y-8 animate-slide-up">
-      {/* Background orbs */}
-      <div className="fixed top-0 right-0 w-[500px] h-[500px] pointer-events-none opacity-30" style={{ zIndex: 0 }}>
-        <div className="absolute top-20 right-20 w-72 h-72 rounded-full bg-indigo-600/8 blur-[100px]" style={{ animation: 'orbFloat 8s ease-in-out infinite' }} />
-        <div className="absolute top-40 right-60 w-48 h-48 rounded-full bg-purple-600/6 blur-[80px]" style={{ animation: 'orbFloat 12s ease-in-out infinite reverse' }} />
-      </div>
-
       {/* Header */}
-      <div className="relative z-10 flex items-start justify-between gap-4 flex-wrap">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Dashboard</h1>
-          <p className="text-sm text-white/25 mt-2">Real-time bot monitoring & controls</p>
+          <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Панель управления</h1>
+          <p className="text-sm text-slate-400 mt-2">Статус бота и управление</p>
         </div>
         <button onClick={onToggleBot} className={status.online ? 'btn-danger' : 'btn-primary'}>
           <IcPower className="w-4 h-4" />
-          {status.online ? 'Stop Bot' : 'Launch Bot'}
+          {status.online ? 'Остановить' : 'Запустить'}
         </button>
       </div>
 
-      {/* Stats grid */}
-      <div className="relative z-10 grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          gradient="from-emerald-500/10 to-emerald-500/[.02]"
-          borderColor={status.online ? 'border-emerald-500/10' : undefined}
+          color="emerald"
           icon={<div className={status.online ? 'status-online' : 'status-offline'} />}
-          label="Status"
-          value={status.online ? 'Online' : 'Offline'}
-          accent={status.online ? 'text-emerald-300' : 'text-white/25'}
+          label="Статус"
+          value={status.online ? 'Онлайн' : 'Оффлайн'}
         />
         <StatCard
-          gradient="from-indigo-500/8 to-indigo-500/[.02]"
-          icon={<IcActivity className="w-4 h-4 text-indigo-400/70" />}
-          label="Uptime"
-          value={status.online ? `${uptimeH}h ${uptimeM}m ${uptimeS}s` : '--'}
-          accent="text-indigo-200/80"
+          color="indigo"
+          icon={<IcActivity className="w-4 h-4 text-indigo-500" />}
+          label="Время работы"
+          value={status.online ? `${uptimeH}ч ${uptimeM}м ${uptimeS}с` : '—'}
         />
         <StatCard
-          gradient="from-purple-500/8 to-purple-500/[.02]"
-          icon={<IcServer className="w-4 h-4 text-purple-400/70" />}
-          label="Guilds"
+          color="purple"
+          icon={<IcServer className="w-4 h-4 text-purple-500" />}
+          label="Серверов"
           value={status.online ? String(status.guilds) : '0'}
-          accent="text-purple-200/80"
         />
         <StatCard
-          gradient="from-amber-500/8 to-amber-500/[.02]"
-          icon={<IcMusic className="w-4 h-4 text-amber-400/70" />}
-          label="Library"
-          value={`${tracks.length}`}
-          sub="tracks"
-          accent="text-amber-200/80"
+          color="amber"
+          icon={<IcMusic className="w-4 h-4 text-amber-500" />}
+          label="Треков"
+          value={String(tracks.length)}
         />
       </div>
 
-      {/* Now Playing — large hero card */}
-      <div className="relative z-10 glass-md rounded-2xl overflow-hidden">
-        {/* Gradient accent top border */}
-        <div className="h-[2px] bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent" />
-
+      {/* Now Playing */}
+      <div className="glass-md rounded-3xl overflow-hidden">
+        <div className="h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-fuchsia-500" />
         <div className="p-7">
           <div className="flex items-center gap-2.5 mb-6">
-            <div className="w-2 h-2 rounded-full bg-indigo-500/50" />
-            <h2 className="text-xs font-bold text-white/40 uppercase tracking-[.15em]">Now Playing</h2>
+            <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" />
+            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-[.15em]">Сейчас играет</h2>
           </div>
 
           {status.currentTrack ? (
-            <div className="flex items-center gap-6 flex-wrap sm:flex-nowrap">
-              {/* Album art placeholder with animated ring */}
-              <div className="relative flex-shrink-0">
-                <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500/15 via-purple-500/10 to-fuchsia-500/15 border border-white/[.06] flex items-center justify-center ${status.isPlaying ? 'glow-indigo' : ''}`}>
-                  <div className={status.isPlaying ? 'disc-spin' : ''}>
-                    <IcMusic className="w-8 h-8 text-indigo-400/40" />
-                  </div>
+            <div className="flex items-center gap-6 flex-wrap">
+              <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-100 to-purple-100 border border-indigo-200/50 flex items-center justify-center ${status.isPlaying ? 'glow-indigo' : ''}`}>
+                <div className={status.isPlaying ? 'disc-spin' : ''}>
+                  <IcMusic className="w-8 h-8 text-indigo-400" />
                 </div>
-                {status.isPlaying && (
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/20 flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                  </div>
-                )}
               </div>
-
               <div className="flex-1 min-w-0">
-                <div className="text-xl font-bold text-white tracking-tight truncate">{status.currentTrack.title}</div>
-                <div className="text-sm text-white/25 mt-1">{status.currentTrack.artist}</div>
-
-                {/* Progress */}
-                <div className="mt-4">
-                  <div className="progress-bar">
-                    <div className="progress-bar-fill" style={{ width: `${status.progress * 100}%` }} />
-                  </div>
-                  <div className="flex justify-between mt-2">
-                    <span className="text-[11px] text-white/15 mono">{formatDuration(status.currentTrack.duration * status.progress)}</span>
-                    <span className="text-[11px] text-white/15 mono">{formatDuration(status.currentTrack.duration)}</span>
-                  </div>
+                <div className="text-xl font-bold text-slate-800 truncate">{status.currentTrack.title}</div>
+                <div className="text-sm text-slate-400 mt-1">{status.currentTrack.artist}</div>
+                <div className="mt-4 progress-bar">
+                  <div className="progress-bar-fill" style={{ width: `${status.progress * 100}%` }} />
+                </div>
+                <div className="flex justify-between mt-2">
+                  <span className="text-[11px] text-slate-300 mono">{formatDuration(status.currentTrack.duration * status.progress)}</span>
+                  <span className="text-[11px] text-slate-300 mono">{formatDuration(status.currentTrack.duration)}</span>
                 </div>
               </div>
-
-              {/* Waveform */}
               {status.isPlaying && (
-                <div className="hidden md:flex items-end gap-[3px] h-12 opacity-60">
-                  {[14, 24, 10, 30, 16, 28, 12, 22, 18, 32, 8, 26, 14, 20, 28, 12, 24].map((h, i) => (
-                    <div
-                      key={i}
-                      className="waveform-bar"
-                      style={{ '--h': `${h}px`, '--d': `${0.5 + (i % 5) * 0.12}s`, '--delay': `${i * 0.06}s` } as React.CSSProperties}
-                    />
+                <div className="hidden md:flex items-end gap-[3px] h-12">
+                  {[14, 24, 10, 30, 16, 28, 12, 22, 18, 32, 8, 26, 14, 20].map((h, i) => (
+                    <div key={i} className="waveform-bar" style={{ '--h': `${h}px`, '--d': `${0.5 + (i % 5) * 0.1}s`, '--delay': `${i * 0.05}s` } as React.CSSProperties} />
                   ))}
                 </div>
               )}
@@ -125,60 +92,49 @@ export default function DashboardPage({ status, tracks, onToggleBot }: Props) {
           ) : (
             <div className="text-center py-12">
               <div className="w-16 h-16 rounded-2xl glass mx-auto mb-4 flex items-center justify-center">
-                <IcMusic className="w-7 h-7 text-white/8" />
+                <IcMusic className="w-7 h-7 text-slate-300" />
               </div>
-              <p className="text-sm text-white/15 font-medium">No track playing</p>
-              <p className="text-xs text-white/8 mt-1">Use /play in Discord or play from Library</p>
+              <p className="text-sm text-slate-400 font-medium">Ничего не играет</p>
+              <p className="text-xs text-slate-300 mt-1">Используй /play в Discord</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Bottom row — Commands + Connection */}
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Commands */}
-        <div className="glass-md rounded-2xl overflow-hidden card-shine">
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
-          <div className="p-6">
-            <h2 className="text-xs font-bold text-white/40 uppercase tracking-[.15em] mb-5">Slash Commands</h2>
-            <div className="space-y-2.5">
-              {[
-                { cmd: '/play', args: '<query>', desc: 'Play a track' },
-                { cmd: '/skip', args: '', desc: 'Skip current' },
-                { cmd: '/stop', args: '', desc: 'Stop & clear' },
-                { cmd: '/queue', args: '', desc: 'View queue' },
-                { cmd: '/nowplaying', args: '', desc: 'Current info' },
-                { cmd: '/volume', args: '<1-100>', desc: 'Set volume' },
-              ].map((c, i) => (
-                <div key={i} className="flex items-center gap-3 group">
-                  <code className="text-[12px] mono font-semibold text-indigo-300/70 bg-indigo-500/[.06] px-2.5 py-1 rounded-lg min-w-[110px] transition-colors group-hover:text-indigo-300 group-hover:bg-indigo-500/10">
-                    {c.cmd} <span className="text-indigo-300/30">{c.args}</span>
-                  </code>
-                  <span className="text-[12px] text-white/20 group-hover:text-white/35 transition-colors">{c.desc}</span>
-                </div>
-              ))}
-            </div>
+      {/* Commands + Info */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="glass-md rounded-3xl p-7">
+          <h2 className="text-xs font-bold text-slate-500 uppercase tracking-[.15em] mb-5">Команды бота</h2>
+          <div className="space-y-3">
+            {[
+              { cmd: '/play', args: '<запрос>', desc: 'Воспроизвести трек' },
+              { cmd: '/skip', args: '', desc: 'Пропустить' },
+              { cmd: '/stop', args: '', desc: 'Остановить' },
+              { cmd: '/queue', args: '', desc: 'Очередь' },
+              { cmd: '/np', args: '', desc: 'Текущий трек' },
+              { cmd: '/volume', args: '<1-100>', desc: 'Громкость' },
+            ].map((c, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <code className="text-[12px] mono font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl min-w-[120px]">
+                  {c.cmd} <span className="text-indigo-300">{c.args}</span>
+                </code>
+                <span className="text-[12px] text-slate-400">{c.desc}</span>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Connection */}
-        <div className="glass-md rounded-2xl overflow-hidden card-shine">
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
-          <div className="p-6">
-            <h2 className="text-xs font-bold text-white/40 uppercase tracking-[.15em] mb-5">Connection</h2>
-            <div className="space-y-4">
-              <InfoRow icon={<IcGlobe className="w-3.5 h-3.5" />} label="Gateway" value={status.online ? 'Connected' : 'Disconnected'} ok={status.online} />
-              <InfoRow icon={<IcVolume className="w-3.5 h-3.5" />} label="Voice" value={status.voiceConnections > 0 ? `${status.voiceConnections} active` : 'None'} ok={status.voiceConnections > 0} />
-              <InfoRow icon={<IcActivity className="w-3.5 h-3.5" />} label="Latency" value={status.online ? `${Math.floor(30 + Math.random() * 40)}ms` : '--'} ok={status.online} />
-              <InfoRow icon={<IcQueue className="w-3.5 h-3.5" />} label="Queue" value={`${status.queue.length} tracks`} ok={status.queue.length > 0} />
-            </div>
-
-            <div className="divider my-5" />
-
-            <div className="flex items-center gap-2 text-[10px] text-white/10">
-              <IcServer className="w-3 h-3" />
-              <span className="mono">discord.js v14.16 / discord-player v7.2 / Node 22</span>
-            </div>
+        <div className="glass-md rounded-3xl p-7">
+          <h2 className="text-xs font-bold text-slate-500 uppercase tracking-[.15em] mb-5">Соединение</h2>
+          <div className="space-y-4">
+            <InfoRow icon={<IcGlobe className="w-3.5 h-3.5" />} label="Gateway" value={status.online ? 'Подключен' : 'Отключен'} ok={status.online} />
+            <InfoRow icon={<IcVolume className="w-3.5 h-3.5" />} label="Голос" value={status.voiceConnections > 0 ? `${status.voiceConnections} канал` : 'Нет'} ok={status.voiceConnections > 0} />
+            <InfoRow icon={<IcActivity className="w-3.5 h-3.5" />} label="Пинг" value={status.online ? `${Math.floor(30 + Math.random() * 40)}мс` : '—'} ok={status.online} />
+            <InfoRow icon={<IcQueue className="w-3.5 h-3.5" />} label="Очередь" value={`${status.queue.length} треков`} ok={status.queue.length > 0} />
+          </div>
+          <div className="divider my-5" />
+          <div className="text-[10px] text-slate-300 mono">
+            discord.js v14 / discord-player v7
           </div>
         </div>
       </div>
@@ -186,32 +142,32 @@ export default function DashboardPage({ status, tracks, onToggleBot }: Props) {
   );
 }
 
-function StatCard({ icon, label, value, accent, gradient, borderColor, sub }: {
-  icon: React.ReactNode; label: string; value: string; accent?: string;
-  gradient?: string; borderColor?: string; sub?: string;
-}) {
+function StatCard({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: string; color: string }) {
+  const colors: Record<string, string> = {
+    emerald: 'from-emerald-50 to-emerald-50/30 border-emerald-200/50',
+    indigo: 'from-indigo-50 to-indigo-50/30 border-indigo-200/50',
+    purple: 'from-purple-50 to-purple-50/30 border-purple-200/50',
+    amber: 'from-amber-50 to-amber-50/30 border-amber-200/50',
+  };
   return (
-    <div className={`rounded-2xl p-5 bg-gradient-to-br ${gradient || 'from-white/[.02] to-transparent'} border ${borderColor || 'border-white/[.04]'} card-shine transition-all`}>
-      <div className="flex items-center gap-2 mb-4">{icon}</div>
-      <div className="flex items-baseline gap-1.5">
-        <div className={`text-2xl font-extrabold tracking-tight ${accent || 'text-white/80'}`}>{value}</div>
-        {sub && <span className="text-[11px] text-white/15">{sub}</span>}
-      </div>
-      <div className="text-[11px] text-white/15 mt-1.5 font-medium">{label}</div>
+    <div className={`rounded-2xl p-5 bg-gradient-to-br ${colors[color]} border`}>
+      <div className="mb-4">{icon}</div>
+      <div className="text-2xl font-extrabold text-slate-800">{value}</div>
+      <div className="text-[11px] text-slate-400 mt-1 font-semibold">{label}</div>
     </div>
   );
 }
 
 function InfoRow({ icon, label, value, ok }: { icon: React.ReactNode; label: string; value: string; ok: boolean }) {
   return (
-    <div className="flex items-center justify-between group">
+    <div className="flex items-center justify-between">
       <div className="flex items-center gap-2.5">
-        <span className="text-white/10 group-hover:text-white/20 transition-colors">{icon}</span>
-        <span className="text-xs text-white/25">{label}</span>
+        <span className="text-slate-300">{icon}</span>
+        <span className="text-xs text-slate-400">{label}</span>
       </div>
       <div className="flex items-center gap-2.5">
-        <span className="text-xs text-white/45 mono">{value}</span>
-        <div className={`w-1.5 h-1.5 rounded-full transition-colors ${ok ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,.5)]' : 'bg-white/8'}`} />
+        <span className="text-xs text-slate-600 mono font-medium">{value}</span>
+        <div className={`w-2 h-2 rounded-full ${ok ? 'bg-emerald-400' : 'bg-slate-200'}`} />
       </div>
     </div>
   );

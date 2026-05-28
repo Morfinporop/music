@@ -7,10 +7,10 @@ interface Props {
 }
 
 const levelStyle: Record<string, { text: string; bg: string; dot: string }> = {
-  info: { text: 'text-sky-300/60', bg: 'bg-sky-400/6', dot: 'bg-sky-400/40' },
-  warn: { text: 'text-amber-300/60', bg: 'bg-amber-400/6', dot: 'bg-amber-400/40' },
-  error: { text: 'text-rose-300/60', bg: 'bg-rose-400/6', dot: 'bg-rose-400/40' },
-  success: { text: 'text-emerald-300/60', bg: 'bg-emerald-400/6', dot: 'bg-emerald-400/40' },
+  info: { text: 'text-sky-600', bg: 'bg-sky-50', dot: 'bg-sky-400' },
+  warn: { text: 'text-amber-600', bg: 'bg-amber-50', dot: 'bg-amber-400' },
+  error: { text: 'text-rose-600', bg: 'bg-rose-50', dot: 'bg-rose-400' },
+  success: { text: 'text-emerald-600', bg: 'bg-emerald-50', dot: 'bg-emerald-400' },
 };
 
 export default function LogsPage({ logs, onClear }: Props) {
@@ -18,12 +18,12 @@ export default function LogsPage({ logs, onClear }: Props) {
     <div className="space-y-6 animate-slide-up">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Logs</h1>
-          <p className="text-sm text-white/20 mt-2">{logs.length} entries</p>
+          <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Логи</h1>
+          <p className="text-sm text-slate-400 mt-2">{logs.length} записей</p>
         </div>
         {logs.length > 0 && (
           <button onClick={onClear} className="btn-ghost text-xs">
-            <IcTrash className="w-3.5 h-3.5" />Clear
+            <IcTrash className="w-3.5 h-3.5" />Очистить
           </button>
         )}
       </div>
@@ -31,26 +31,25 @@ export default function LogsPage({ logs, onClear }: Props) {
       {logs.length === 0 ? (
         <div className="text-center py-20">
           <div className="w-16 h-16 rounded-2xl glass mx-auto mb-5 flex items-center justify-center">
-            <IcTerminal className="w-7 h-7 text-white/6" />
+            <IcTerminal className="w-7 h-7 text-slate-300" />
           </div>
-          <p className="text-sm text-white/15 font-medium">No log entries yet</p>
-          <p className="text-xs text-white/8 mt-2">Actions will be logged here</p>
+          <p className="text-sm text-slate-400 font-medium">Логов пока нет</p>
         </div>
       ) : (
-        <div className="glass-md rounded-2xl overflow-hidden">
-          <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
-            {[...logs].reverse().map((log, idx) => {
+        <div className="glass-md rounded-3xl overflow-hidden">
+          <div className="max-h-[calc(100vh-280px)] overflow-y-auto">
+            {[...logs].reverse().map(log => {
               const s = levelStyle[log.level] || levelStyle.info;
               return (
-                <div key={log.id} className="flex items-start gap-3.5 px-6 py-3.5 border-b border-white/[.02] last:border-b-0 hover:bg-white/[.008] transition-colors" style={{ animationDelay: `${idx * 15}ms` }}>
-                  <span className="text-[10px] text-white/10 mono mt-[3px] w-[60px] flex-shrink-0">{formatTime(log.timestamp)}</span>
-                  <div className="flex items-center gap-1.5 flex-shrink-0 mt-[2px]">
+                <div key={log.id} className="flex items-start gap-4 px-6 py-4 border-b border-slate-100 last:border-b-0 hover:bg-slate-50/50 transition-colors">
+                  <span className="text-[10px] text-slate-300 mono mt-[3px] w-[65px] flex-shrink-0">{formatTime(log.timestamp)}</span>
+                  <div className="flex items-center gap-2 flex-shrink-0 mt-[2px]">
                     <div className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
-                    <span className={`text-[9px] uppercase font-bold tracking-wider ${s.text} ${s.bg} px-1.5 py-0.5 rounded`}>
-                      {log.level}
+                    <span className={`text-[9px] uppercase font-bold tracking-wider ${s.text} ${s.bg} px-2 py-0.5 rounded-md`}>
+                      {log.level === 'info' ? 'ИНФО' : log.level === 'warn' ? 'ВНИМАНИЕ' : log.level === 'error' ? 'ОШИБКА' : 'УСПЕХ'}
                     </span>
                   </div>
-                  <span className="text-[12px] text-white/30 mono leading-relaxed break-all">{log.message}</span>
+                  <span className="text-[12px] text-slate-500 mono leading-relaxed">{log.message}</span>
                 </div>
               );
             })}
