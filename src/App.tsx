@@ -10,7 +10,7 @@ import SettingsPage from './components/SettingsPage';
 import LogsPage from './components/LogsPage';
 import {
   Track, BotConfig, BotStatus, LogEntry,
-  getInitialData, saveData, createLog,
+  getInitialData, saveData, createLog, fetchTracks, getRemoteStatus, saveTrackToDb
 } from './store';
 
 type Page = 'dashboard' | 'library' | 'queue' | 'upload' | 'settings' | 'logs';
@@ -40,7 +40,19 @@ export default function App() {
     setLogs(prev => [...prev, createLog(level, message)].slice(-300));
   }, []);
 
-  useEffect(() => { saveData(config, tracks, logs); }, [config, tracks, logs]);
+  // Persist config only
+  useEffect(() => { saveData(config); }, [config]);
+
+  // Load from DB
+  useEffect(() => {
+    fetchTracks().then(setTracks);
+    const interval = setInterval(() => {
+      getRemoteStatus().then(status => {
+        setBotOnline(status.online);
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const skipRef = useRef(() => {});
 
@@ -143,9 +155,10 @@ export default function App() {
     playTrack(track);
   };
 
-  const addTrackToLibrary = (track: Track) => {
-    setTracks(prev => [...prev, track]);
-    addLog('success', `Добавлено: ${track.title}`);
+  const addTrackToLibrary = async (track: Track) => {
+    const saved = await saveTrackToDb(track);
+    setTracks(prev => [...prev, { ...saved, id: saved._id }]);
+    addLog('success', `Добавлено в БД: ${track.title}`);
   };
 
   const deleteTrack = (id: string) => {

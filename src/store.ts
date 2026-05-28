@@ -1,6 +1,7 @@
 // Types
 export interface Track {
   id: string;
+  _id?: string; // MongoDB ID
   title: string;
   artist: string;
   duration: number; // seconds
@@ -40,20 +41,46 @@ export interface LogEntry {
   message: string;
 }
 
-// Helpers
-const STORAGE_KEY = 'soundforge_data';
+// API Helpers
+const API_URL = ''; 
+
+export async function fetchTracks(): Promise<Track[]> {
+  try {
+    const res = await fetch(`${API_URL}/api/tracks`);
+    const data = await res.json();
+    return data.map((t: any) => ({ ...t, id: t._id || t.id }));
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
+}
+
+export async function saveTrackToDb(track: Partial<Track>) {
+  const res = await fetch(`${API_URL}/api/tracks`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(track),
+  });
+  return res.json();
+}
+
+export async function getRemoteStatus() {
+  try {
+    const res = await fetch(`${API_URL}/api/status`);
+    return await res.json();
+  } catch {
+    return { online: false, guilds: 0, uptime: 0 };
+  }
+}
 
 function uid(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
-function loadData(): { config: BotConfig; tracks: Track[]; logs: LogEntry[] } {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch { /* empty */ }
+export function getInitialData() {
+  const saved = localStorage.getItem('sf_config');
   return {
-    config: {
+    config: saved ? JSON.parse(saved) : {
       token: '',
       clientId: '',
       guildId: '',
@@ -68,12 +95,8 @@ function loadData(): { config: BotConfig; tracks: Track[]; logs: LogEntry[] } {
   };
 }
 
-export function saveData(config: BotConfig, tracks: Track[], logs: LogEntry[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ config, tracks, logs }));
-}
-
-export function getInitialData() {
-  return loadData();
+export function saveData(config: BotConfig) {
+  localStorage.setItem('sf_config', JSON.stringify(config));
 }
 
 export function createTrack(partial: Partial<Track>): Track {
